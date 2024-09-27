@@ -6,7 +6,10 @@ class HotelDatasourceImpl implements HotelDatasourceInterface {
   @override
   Future<http.Response> fetchHotelsListApi() async {
     try {
-      http.Response response = await http.get(Uri.parse("https://dkndmolrswy7b.cloudfront.net/hotels.json"));
+      http.Response response = await http.get(
+        Uri.parse("https://dkndmolrswy7b.cloudfront.net/hotels.json"),
+        headers: {"Content-Type": "application/json"},
+      );
       return response;
     } catch (e) {
       throw UnimplementedError();
