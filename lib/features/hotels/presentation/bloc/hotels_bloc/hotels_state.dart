@@ -13,6 +13,9 @@ final class HotelsLoadingState extends HotelsState {
 }
 
 final class HotelsLoadedState extends HotelsState {
+  final HotelSearch hotelSearch;
+
+  const HotelsLoadedState({required this.hotelSearch});
   @override
   List<Object> get props => [];
 }

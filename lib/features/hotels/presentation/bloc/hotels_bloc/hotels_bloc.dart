@@ -16,7 +16,7 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
   final AddFavoriteHotelsHive addFavoriteHotelsHive;
   final GetFavoriteHotelsHive getFavoriteHotelsHive;
   final RemoveFavoriteHotelsHive removeFavoriteHotelsHive;
-  late HotelSearch hotelSearch;
+  late HotelSearch _hotelSearch;
 
   HotelsBloc({
     required this.fetchHotelsListApiUsecase,
@@ -39,8 +39,8 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
           emit(HotelsFetchFailedState(failureMessage: failure.message));
         },
         (HotelSearch hotelSearchResult) {
-          hotelSearch = hotelSearchResult;
-          emit(HotelsLoadedState());
+          _hotelSearch = hotelSearchResult;
+          emit(HotelsLoadedState(hotelSearch: hotelSearchResult));
         },
       );
     } catch (e) {
