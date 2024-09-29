@@ -6,14 +6,19 @@ import 'package:hotel_booking/features/hotels/presentation/widgets/score/star_sc
 
 class HotelDetailAndImageWidget extends StatelessWidget {
   final Hotel hotelObj;
-  const HotelDetailAndImageWidget({super.key, required this.hotelObj});
+  final bool showRating;
+  const HotelDetailAndImageWidget({
+    super.key,
+    required this.hotelObj,
+    required this.showRating,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HotelImageStackWidget(hotelObj: hotelObj),
+        HotelImageStackWidget(hotelObj: hotelObj, showRating: showRating),
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

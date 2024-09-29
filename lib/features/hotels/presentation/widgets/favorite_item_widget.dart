@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/hotel.dart';
 import 'package:hotel_booking/features/hotels/presentation/widgets/hotel_detail_and_Image_widget.dart';
-import 'package:hotel_booking/features/hotels/presentation/widgets/hotel_meta_info_widget.dart';
 
-class OverviewItemWidget extends StatelessWidget {
+class FavoriteItemWidget extends StatelessWidget {
   final Hotel hotelObj;
-  const OverviewItemWidget({
+  const FavoriteItemWidget({
     super.key,
     required this.hotelObj,
   });
@@ -19,13 +18,7 @@ class OverviewItemWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(10.0),
       ),
       elevation: 5,
-      child: Column(
-        children: [
-          HotelDetailAndImageWidget(hotelObj: hotelObj, showRating: false),
-          const Divider(indent: 20, endIndent: 20),
-          HotelMetaInfoWidget(hotelObj: hotelObj),
-        ],
-      ),
+      child: HotelDetailAndImageWidget(hotelObj: hotelObj, showRating: true),
     );
   }
 }

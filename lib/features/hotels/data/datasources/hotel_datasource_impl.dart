@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hotel_booking/features/hotels/data/datasources/hotel_datasource_interface.dart';
@@ -21,8 +23,7 @@ class HotelDatasourceImpl implements HotelDatasourceInterface {
   @override
   bool addFavariteHotelsHive(HotelModel hotelObj) {
     try {
-      GetIt.I<Box>().put(hotelObj.hotelId, hotelObj.toJson());
-      print(GetIt.I<Box>().keys);
+      GetIt.I<Box>().put(hotelObj.hotelId, jsonEncode(hotelObj.toJson()));
       return true;
     } catch (e) {
       return false;
@@ -33,8 +34,8 @@ class HotelDatasourceImpl implements HotelDatasourceInterface {
   List<HotelModel> getFavariteHotelsHive() {
     try {
       List<HotelModel> hotelsList = [];
-      for (var hotelJson in GetIt.I<Box>().values) {
-        hotelsList.add(HotelModel.fromJson(hotelJson));
+      for (String hotelJson in GetIt.I<Box>().values.toList().cast<String>()) {
+        hotelsList.add(HotelModel.fromJson(jsonDecode(hotelJson)));
       }
       return hotelsList;
     } catch (e) {

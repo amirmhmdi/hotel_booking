@@ -13,7 +13,7 @@ import 'package:hotel_booking/features/hotels/presentation/bloc/hotels_bloc/hote
 Future<void> setupGetIt() async {
   GetIt.I.registerSingleton<Box>(await Hive.openBox('FavoriteBox'));
   GetIt.I.registerSingleton<AppRouter>(AppRouter());
-
+  
   GetIt.I.registerSingleton<HotelDatasourceImpl>(HotelDatasourceImpl());
   GetIt.I.registerSingleton<HotelRepositoryImpl>(HotelRepositoryImpl(hotelDatasource: GetIt.I<HotelDatasourceImpl>()));
 

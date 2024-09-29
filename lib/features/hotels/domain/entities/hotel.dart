@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/analytics.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/best_offer.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/enum_values.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/image_urls.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/rating_info.dart';
 
-class Hotel {
+class Hotel extends Equatable {
   Analytics analytics;
   List<dynamic> badges;
   BestOffer bestOffer;
@@ -32,6 +33,9 @@ class Hotel {
     required this.name,
     required this.ratingInfo,
   });
+
+  @override
+  List<Object> get props => [hotelId];
 }
 
 enum CategoryType { DOTS }

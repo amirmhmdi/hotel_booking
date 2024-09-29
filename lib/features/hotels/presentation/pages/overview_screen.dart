@@ -43,7 +43,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                   if (index == 0) {
                     return Text(
                       "${NumberFormat("###,###.###", "tr_TR").format(state.hotelSearch.hotelCount)} Hotels für ${state.hotelSearch.usedSearchRequest.destination.split("-").last}",
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     );
                   }
                   return OverviewItemWidget(hotelObj: state.hotelSearch.hotels[index - 1]);

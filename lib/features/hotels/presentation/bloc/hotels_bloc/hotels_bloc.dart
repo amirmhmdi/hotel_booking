@@ -34,8 +34,8 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
   Future<void> _onEvent(HotelsEvent event, Emitter<HotelsState> emit) async {
     if (event is HotelsFetchEvent) return _onEventHotelFetch(event, emit);
     if (event is CheckIsFavoritedEvent) return _onEventCheckIsFavorited(event, emit);
-    if (event is AddFavoriteEvent) return _onEventAddFavoriteFetch(event, emit);
-    if (event is RemoveFavoriteEvent) return _onEventRemoveFavoriteFetch(event, emit);
+    if (event is AddFavoriteEvent) return _onEventAddFavorite(event, emit);
+    if (event is RemoveFavoriteEvent) return _onEventRemoveFavorite(event, emit);
     if (event is GetFavoritesEvent) return _onEventGetFavoriteListFetch(event, emit);
   }
 
@@ -58,7 +58,6 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
   }
 
   Future<void> _onEventCheckIsFavorited(CheckIsFavoritedEvent event, Emitter<HotelsState> emit) async {
-    print("_onEventCheckIsFavorited : ${event.hotel.name}");
     try {
       Either<Failure, bool> result = checkIsFavoritedHotelHive.call(event.hotel);
       result.fold(
@@ -66,7 +65,6 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
           //do nothing
         },
         (bool isFavorited) {
-          print("_onEventCheckIsFavorited IsFavarite : $isFavorited -> ${event.hotel.name}");
           emit(IsFavoritedHotelState(hotel: event.hotel, isFavorited: isFavorited));
         },
       );
@@ -75,8 +73,7 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
     }
   }
 
-  Future<void> _onEventAddFavoriteFetch(AddFavoriteEvent event, Emitter<HotelsState> emit) async {
-    emit(const FavoriteHotelDbProcessState());
+  Future<void> _onEventAddFavorite(AddFavoriteEvent event, Emitter<HotelsState> emit) async {
     try {
       Either<Failure, bool> result = addFavoriteHotelsHive.call(event.hotel);
       result.fold(
@@ -84,8 +81,11 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
           emit(FavoriteHotelFailurState(message: failure.message));
         },
         (bool isOkay) {
-          emit(FavoriteHotelAddedState(hotel: event.hotel));
           emit(IsFavoritedHotelState(hotel: event.hotel, isFavorited: true));
+          if (!favoriteList.contains(event.hotel)) {
+            favoriteList.add(event.hotel);
+          }
+          emit(FavoriteHotelsListLoadedState(hotelsList: favoriteList));
         },
       );
     } catch (e) {
@@ -93,8 +93,7 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
     }
   }
 
-  Future<void> _onEventRemoveFavoriteFetch(RemoveFavoriteEvent event, Emitter<HotelsState> emit) async {
-    emit(const FavoriteHotelDbProcessState());
+  Future<void> _onEventRemoveFavorite(RemoveFavoriteEvent event, Emitter<HotelsState> emit) async {
     try {
       Either<Failure, bool> result = removeFavoriteHotelsHive.call(event.hotel);
       result.fold(
@@ -102,8 +101,11 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
           emit(FavoriteHotelFailurState(message: failure.message));
         },
         (bool isOkay) {
-          emit(FavoriteHotelRemoveState(hotel: event.hotel));
           emit(IsFavoritedHotelState(hotel: event.hotel, isFavorited: false));
+
+          favoriteList.remove(event.hotel);
+
+          emit(FavoriteHotelsListLoadedState(hotelsList: favoriteList));
         },
       );
     } catch (e) {
@@ -112,20 +114,20 @@ class HotelsBloc extends Bloc<HotelsEvent, HotelsState> {
   }
 
   Future<void> _onEventGetFavoriteListFetch(GetFavoritesEvent event, Emitter<HotelsState> emit) async {
-    emit(const FavoriteHotelDbProcessState());
+    emit(const FavoriteHotelsListLoadingState());
     try {
       Either<Failure, List<Hotel>> result = getFavoriteHotelsHive.call();
       result.fold(
         (Failure failure) {
-          emit(FavoriteHotelFailurState(message: failure.message));
+          emit(FavoriteHotelListFailurState(message: failure.message));
         },
         (List<Hotel> hotelList) {
           favoriteList = hotelList;
-          emit(GetFavoriteHotelsListState(hotelsList: favoriteList));
+          emit(FavoriteHotelsListLoadedState(hotelsList: favoriteList));
         },
       );
     } catch (e) {
-      emit(const FavoriteHotelFailurState(message: "DataBase need Help! try again later :("));
+      emit(const FavoriteHotelListFailurState(message: "DataBase need Help! try again later :("));
     }
   }
 }
