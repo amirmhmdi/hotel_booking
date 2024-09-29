@@ -6,8 +6,18 @@ class ImageUrlsModel extends ImageUrls {
     required super.small,
   });
 
+  factory ImageUrlsModel.fromDomain(ImageUrls imageUrls) => ImageUrlsModel(
+        large: imageUrls.large,
+        small: imageUrls.small,
+      );
+
   factory ImageUrlsModel.fromJson(Map<String, dynamic> json) => ImageUrlsModel(
         large: json["large"],
         small: json["small"],
       );
+
+  Map<String, dynamic> toJson() => {
+        "large": large,
+        "small": small,
+      };
 }

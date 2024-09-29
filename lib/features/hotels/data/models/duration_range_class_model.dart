@@ -6,8 +6,18 @@ class DurationRangeClassModel extends DurationRangeClass {
     required super.min,
   });
 
+  factory DurationRangeClassModel.fromDomain(DurationRangeClass durationRangeClass) => DurationRangeClassModel(
+        max: durationRangeClass.max,
+        min: durationRangeClass.min,
+      );
+
   factory DurationRangeClassModel.fromJson(Map<String, dynamic> json) => DurationRangeClassModel(
         max: json["max"],
         min: json["min"],
-    );
+      );
+
+  Map<String, dynamic> toJson() => {
+        "max": max,
+        "min": min,
+      };
 }
