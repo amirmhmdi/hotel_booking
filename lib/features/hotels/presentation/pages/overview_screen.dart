@@ -28,6 +28,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
       appBar: const HotelAppbar(appbarTitle: "Hotels"),
       body: BlocBuilder<HotelsBloc, HotelsState>(
+        buildWhen: (previous, current) => (current is HotelsLoadingState || current is HotelsLoadedState || current is HotelsFetchFailedState),
         builder: (context, state) {
           if (state is HotelsLoadingState) {
             return Container(

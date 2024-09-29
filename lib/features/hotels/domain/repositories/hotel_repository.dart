@@ -8,7 +8,9 @@ abstract class HotelRepository {
 
   Either<Failure, List<Hotel>> getFavariteHotelsHive();
 
-  Either<Failure, bool> addFavariteHotelsHive();
+  Either<Failure, bool> addFavariteHotelsHive(Hotel hotel);
 
-  Either<Failure, bool> removeFavariteHotelsHive();
+  Either<Failure, bool> removeFavariteHotelsHive(Hotel hotel);
+
+  Either<Failure, bool> checkIsFavaritedHotelsHive(Hotel hotel);
 }

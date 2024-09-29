@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:hotel_booking/features/hotels/domain/entities/hotel.dart';
+import 'package:hotel_booking/features/hotels/presentation/bloc/hotels_bloc/hotels_bloc.dart';
 
 class HotelImageStackWidget extends StatefulWidget {
   final Hotel hotelObj;
@@ -12,6 +15,7 @@ class HotelImageStackWidget extends StatefulWidget {
 class _HotelImageStackWidgetState extends State<HotelImageStackWidget> {
   @override
   Widget build(BuildContext context) {
+    GetIt.I<HotelsBloc>().add(CheckIsFavoritedEvent(hotel: widget.hotelObj));
     return Stack(
       children: [
         Image.network(
@@ -22,13 +26,25 @@ class _HotelImageStackWidgetState extends State<HotelImageStackWidget> {
         Positioned.fill(
           child: Align(
             alignment: Alignment.topRight,
-            child: IconButton(
-              onPressed: () {},
-              padding: const EdgeInsets.all(8.0),
-              icon: const Icon(
-                Icons.favorite,
-                color: Colors.white,
-              ),
+            child: BlocBuilder<HotelsBloc, HotelsState>(
+              buildWhen: (previous, current) => (current is IsFavoritedHotelState && current.hotel.hotelId == widget.hotelObj.hotelId),
+              builder: (context, state) {
+                print("IsFavoritedHotelState builder : ${widget.hotelObj.name}");
+                return IconButton(
+                  onPressed: () {
+                    if (state is IsFavoritedHotelState && state.hotel.hotelId == widget.hotelObj.hotelId && state.isFavorited) {
+                      GetIt.I<HotelsBloc>().add(RemoveFavoriteEvent(hotel: widget.hotelObj));
+                    } else {
+                      GetIt.I<HotelsBloc>().add(AddFavoriteEvent(hotel: widget.hotelObj));
+                    }
+                  },
+                  padding: const EdgeInsets.all(8.0),
+                  icon: Icon(
+                    Icons.favorite,
+                    color: (state is IsFavoritedHotelState && state.hotel.hotelId == widget.hotelObj.hotelId && state.isFavorited) ? Colors.red : Colors.white,
+                  ),
+                );
+              },
             ),
           ),
         ),
